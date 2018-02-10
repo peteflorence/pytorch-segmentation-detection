@@ -2,6 +2,7 @@ import torch
 import torch.utils.data as data
 
 import numpy as np
+from matplotlib import pyplot as plt
 
 from six.moves import urllib
 from PIL import Image
@@ -74,12 +75,30 @@ class PascalVOCSegmentation(data.Dataset):
     
     def __getitem__(self, index):
         
+        debug_this_function = False
+
         img_path, annotation_path = self.img_anno_pairs[index]
+        if debug_this_function:
+            print "img_path inside pascal_voc.py"
+            print img_path
+            print annotation_path
         
         _img = Image.open(img_path).convert('RGB')
         
+        if debug_this_function:
+            plt.imshow(_img)
+            plt.show()
+            print "this is _img inside loader"
+            #print np.array(_img)
+        
         # TODO: maybe can be done in a better way
         _target = Image.open(annotation_path)
+        if debug_this_function:
+            _target_numpy = np.asarray(_target)
+            print "target shape", _target_numpy.shape
+            print 
+            plt.imshow(_target_numpy)
+            plt.show()
 
         if self.joint_transform is not None:
             _img, _target = self.joint_transform([_img, _target])
