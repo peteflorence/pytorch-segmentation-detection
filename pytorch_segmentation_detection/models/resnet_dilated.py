@@ -110,7 +110,7 @@ class Resnet18_8s(nn.Module):
         layer.weight.data.normal_(0, 0.01)
         layer.bias.data.zero_()
         
-    def forward(self, x, feature_alignment=False):
+    def forward(self, x, feature_alignment=False, upsample=True):
         
         input_spatial_dim = x.size()[2:]
         
@@ -120,7 +120,8 @@ class Resnet18_8s(nn.Module):
         
         x = self.resnet18_8s(x)
         
-        x = nn.functional.upsample(x, size=input_spatial_dim, mode='bilinear', align_corners=True)
+        if upsample:
+            x = nn.functional.upsample(x, size=input_spatial_dim, mode='bilinear', align_corners=True)
         
         #x = nn.functional.upsample_bilinear(input=x, size=input_spatial_dim)#, align_corners=False)
         
@@ -307,8 +308,8 @@ class Resnet34_8s(nn.Module):
         layer.weight.data.normal_(0, 0.01)
         layer.bias.data.zero_()
         
-    def forward(self, x, feature_alignment=False):
-        
+    def forward(self, x, feature_alignment=False, upsample=True):
+
         input_spatial_dim = x.size()[2:]
         
         if feature_alignment:
@@ -317,9 +318,11 @@ class Resnet34_8s(nn.Module):
         
         x = self.resnet34_8s(x)
         
-        x = nn.functional.upsample_bilinear(input=x, size=input_spatial_dim)
-        
+        if upsample:
+            x = nn.functional.upsample_bilinear(input=x, size=input_spatial_dim)
+            
         return x
+
     
 class Resnet50_32s(nn.Module):
     
