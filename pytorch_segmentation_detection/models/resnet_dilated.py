@@ -70,17 +70,18 @@ class Resnet101_8s(nn.Module):
         
         layer.weight.data.normal_(0, 0.01)
         layer.bias.data.zero_()
-        
-    def forward(self, x):
-        
+
+    def forward(self, x, upsample=True):
+
         input_spatial_dim = x.size()[2:]
         
         x = self.resnet101_8s(x)
         
-        x = nn.functional.upsample_bilinear(input=x, size=input_spatial_dim)
-        
+        if upsample:
+            x = nn.functional.upsample_bilinear(input=x, size=input_spatial_dim)
+            
         return x
-    
+        
 
     
 class Resnet18_8s(nn.Module):
